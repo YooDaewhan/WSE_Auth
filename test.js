@@ -44,7 +44,10 @@ assert.equal(payload.nickname, '길동');
 assert.ok(payload.exp - payload.iat === 900, 'access ttl 15m');
 assert.equal(payload.email, undefined, 'JWT 에 이메일을 넣지 않는다');
 
-assert.throws(() => verifyAccess(`${token.slice(0, -2)}xx`), /signature/i);
+// 페이로드를 갈아끼우면 서명 검증에서 걸려야 한다
+const [head, , sig] = token.split('.');
+const forged = `${head}.${Buffer.from(JSON.stringify({ sub: 'attacker', nickname: '해커' })).toString('base64url')}.${sig}`;
+assert.throws(() => verifyAccess(forged), /signature/i);
 
 console.log('ok');
 process.exit(0);

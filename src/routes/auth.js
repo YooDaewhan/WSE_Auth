@@ -114,7 +114,9 @@ router.get('/:provider/callback', limiter, async (req, res) => {
   const expected = req.cookies?.oauth_state;
   res.clearCookie('oauth_state', { path: '/auth' });
 
-  if (!code || !state || expected !== `${p.name}:${state}`) throw httpError(400, 'invalid_state');
+  if (!code || !state) throw httpError(400, 'missing_code_or_state');
+  if (!expected) throw httpError(400, 'state_cookie_missing');   // 브라우저가 쿠키를 안 돌려줌 (10분 초과 등)
+  if (expected !== `${p.name}:${state}`) throw httpError(400, 'state_mismatch');
 
   const tokens = await postForm(p.tokenUrl, {
     grant_type: 'authorization_code',
