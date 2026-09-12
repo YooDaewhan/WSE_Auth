@@ -12,9 +12,11 @@
 | DNS `auth` A 레코드, Let's Encrypt 인증서 | 완료 (만료 2026-12-11) |
 | DB `auth` + 테이블 3개, `auth_app`(DML만) / `auth_admin`(DDL) | 완료 |
 | `/srv/auth` 코드, `keys/*.pem`, systemd `auth.service`, nginx 리버스 프록시 | 완료 |
-| **`.env` 비밀값 5개** | **미입력 — 아래 참조** |
+| `.env` 비밀값 5개, 서비스 기동 | 완료 |
+| 구글 로그인 — 가입·JWT 발급·`/auth/me`·refresh rotation·logout | **검증 완료** |
+| 카카오 로그인 | 동의항목(닉네임 필수/프로필 사진 선택) 설정 대기 |
 
-## 남은 것 — .env 채우고 기동
+## 남은 것 — 카카오 동의항목
 
 ```bash
 ssh root@49.247.136.17
