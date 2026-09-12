@@ -16,10 +16,10 @@ export const verifyAccess = (token) =>
 
 export async function issueRefresh(userId, userAgent) {
   const token = randomBytes(32).toString('hex');
-  const expiresAt = new Date(Date.now() + config.jwt.refreshDays * 86_400_000);
+  // 만료 시각은 MySQL 이 계산한다. NOW() 와 같은 시간대라야 비교가 맞는다.
   await pool.execute(
-    'INSERT INTO refresh_tokens (user_id, token_hash, expires_at, user_agent) VALUES (?, ?, ?, ?)',
-    [userId, hash(token), expiresAt, (userAgent ?? '').slice(0, 255)],
+    'INSERT INTO refresh_tokens (user_id, token_hash, expires_at, user_agent) VALUES (?, ?, NOW() + INTERVAL ? DAY, ?)',
+    [userId, hash(token), config.jwt.refreshDays, (userAgent ?? '').slice(0, 255)],
   );
   return token;
 }
