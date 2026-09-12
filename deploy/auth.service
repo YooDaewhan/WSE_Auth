@@ -2,6 +2,9 @@
 [Unit]
 Description=auth.wsestudio.net API
 After=network-online.target mysql.service
+# 설정 오류처럼 재시도해도 소용없는 실패에서 무한 루프 방지
+StartLimitIntervalSec=60
+StartLimitBurst=5
 Wants=network-online.target
 
 [Service]
